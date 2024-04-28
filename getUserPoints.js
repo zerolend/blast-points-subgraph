@@ -52,6 +52,7 @@ const getUSDBPoints = async (address, usdbPointsTotal, wethPointsTotal) => {
 
   console.log("blast points earned from USDB", usdbPointsEarned);
   console.log("blast points earned from WETH", wethPointsEarned);
+  console.log("total blast points earned", wethPointsEarned + usdbPointsEarned);
 };
 
 getUSDBPoints(
