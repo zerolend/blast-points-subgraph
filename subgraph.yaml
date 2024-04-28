@@ -9,7 +9,7 @@ dataSources:
     network: blast
     source:
       address: "0x23A58cbe25E36e26639bdD969B0531d3aD5F9c34"
-      abi: USDBAToken
+      abi: ERC20
       startBlock: 0
     mapping:
       kind: ethereum/events
@@ -18,8 +18,8 @@ dataSources:
       entities:
         - Transfer
       abis:
-        - name: USDBAToken
-          file: ./abis/USDBAToken.json
+        - name: ERC20
+          file: ./abis/ERC20.json
       eventHandlers:
         - event: Transfer(indexed address,indexed address,uint256)
           handler: handleTransferSupply
@@ -29,18 +29,58 @@ dataSources:
     network: blast
     source:
       address: "0x0e914b7669E97fd0c2644Af60E90EA7ddb4F91d1"
-      abi: USDBVToken
+      abi: ERC20
       startBlock: 192485
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
       language: wasm/assemblyscript
       entities:
-        - USDBVTokenTransfer
+        - Transfer
       abis:
-        - name: USDBVToken
-          file: ./abis/USDBVToken.json
+        - name: ERC20
+          file: ./abis/ERC20.json
       eventHandlers:
         - event: Transfer(indexed address,indexed address,uint256)
           handler: handleTransferDebt
       file: ./src/usdb-token.ts
+  - kind: ethereum
+    name: WETHAToken
+    network: blast
+    source:
+      address: "0x53a3Aa617afE3C12550a93BA6262430010037B04"
+      abi: ERC20
+      startBlock: 192546
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - Transfer
+      abis:
+        - name: ERC20
+          file: ./abis/ERC20.json
+      eventHandlers:
+        - event: Transfer(indexed address,indexed address,uint256)
+          handler: handleTransferSupply
+      file: ./src/weth-token.ts
+  - kind: ethereum
+    name: WETHVToken
+    network: blast
+    source:
+      address: "0x0e914b7669E97fd0c2644Af60E90EA7ddb4F91d1"
+      abi: ERC20
+      startBlock: 192546
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - Transfer
+      abis:
+        - name: ERC20
+          file: ./abis/ERC20.json
+      eventHandlers:
+        - event: Transfer(indexed address,indexed address,uint256)
+          handler: handleTransferDebt
+      file: ./src/weth-token.ts

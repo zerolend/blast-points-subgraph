@@ -6,6 +6,14 @@ type USDBUser @entity {
   accumulatedPoints: BigInt!
 }
 
+type WETHUser @entity {
+  id: ID!
+  balance: BigInt! # uint256
+  debt: BigInt! # uint256
+  lastUpdatedAt: BigInt! # uint256
+  accumulatedPoints: BigInt!
+}
+
 type Core @entity {
   id: ID!
   totalPointsUSDB: BigInt!

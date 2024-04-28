@@ -1,5 +1,5 @@
 import { BigInt } from "@graphprotocol/graph-ts";
-import { USDBUser } from "../generated/schema";
+import { WETHUser } from "../generated/schema";
 
 import { Transfer as TransferEvent } from "../generated/USDBVToken/USDBVToken";
 import {
@@ -8,10 +8,10 @@ import {
   findOrGetCore,
 } from "./common";
 
-const findOrGetUser = (who: string, timestamp: BigInt): USDBUser => {
-  let user = USDBUser.load(who.toString());
+const findOrGetUser = (who: string, timestamp: BigInt): WETHUser => {
+  let user = WETHUser.load(who.toString());
   if (!user) {
-    user = new USDBUser(who.toString());
+    user = new WETHUser(who.toString());
     user.balance = new BigInt(0);
     user.debt = new BigInt(0);
     user.accumulatedPoints = new BigInt(0);
@@ -36,7 +36,7 @@ function updateUser(address: string, timestamp: BigInt, balance: BigInt): void {
   user.balance = user.balance.plus(balance);
   user.lastUpdatedAt = timestamp;
 
-  core.totalPointsUSDB = core.totalPointsUSDB.plus(accumulatedPoints);
+  core.totalPointsWETH = core.totalPointsWETH.plus(accumulatedPoints);
 
   user.save();
   core.save();
@@ -60,7 +60,7 @@ function updateUserDebt(
   user.debt = user.debt.plus(balance);
   user.lastUpdatedAt = timestamp;
 
-  core.totalPointsUSDB = core.totalPointsUSDB.plus(accumulatedPoints);
+  core.totalPointsWETH = core.totalPointsWETH.plus(accumulatedPoints);
 
   user.save();
   core.save();
