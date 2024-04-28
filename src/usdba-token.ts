@@ -1,34 +1,21 @@
+import { Address, BigInt } from "@graphprotocol/graph-ts";
+import { BalanceTransfer as BalanceTransferEvent } from "../generated/USDBAToken/USDBAToken";
 import {
-  Approval as ApprovalEvent,
-  BalanceTransfer as BalanceTransferEvent,
-  Burn as BurnEvent,
-  Initialized as InitializedEvent,
-  Mint as MintEvent,
-  Transfer as TransferEvent,
-} from "../generated/USDBAToken/USDBAToken";
-import {
-  USDBATokenApproval as Approval,
   USDBATokenBalanceTransfer as BalanceTransfer,
-  USDBATokenBurn as Burn,
-  USDBATokenInitialized as Initialized,
-  USDBATokenMint as Mint,
-  USDBATokenTransfer as Transfer,
+  USDBUser,
 } from "../generated/schema";
 
-export function handleApproval(event: ApprovalEvent): void {
-  let entity = new Approval(
-    event.transaction.hash.concatI32(event.logIndex.toI32())
-  );
-  entity.owner = event.params.owner;
-  entity.spender = event.params.spender;
-  entity.value = event.params.value;
+const findOrGetUser = (who: Address) => {
+  let user = USDBUser.load(who);
+  if (!user) {
+    user = new USDBUser(who);
+    user.balance = new BigInt(0);
+    user.accumulatedPoints = new BigInt(0);
+    user.lastUpdatedAt = Date.now();
+  }
 
-  entity.blockNumber = event.block.number;
-  entity.blockTimestamp = event.block.timestamp;
-  entity.transactionHash = event.transaction.hash;
-
-  entity.save();
-}
+  return user;
+};
 
 export function handleBalanceTransfer(event: BalanceTransferEvent): void {
   let entity = new BalanceTransfer(
@@ -38,79 +25,17 @@ export function handleBalanceTransfer(event: BalanceTransferEvent): void {
   entity.to = event.params.to;
   entity.value = event.params.value;
   entity.index = event.params.index;
-
   entity.blockNumber = event.block.number;
   entity.blockTimestamp = event.block.timestamp;
   entity.transactionHash = event.transaction.hash;
-
   entity.save();
-}
 
-export function handleBurn(event: BurnEvent): void {
-  let entity = new Burn(
-    event.transaction.hash.concatI32(event.logIndex.toI32())
+  const user = findOrGetUser(event.params.from);
+
+  const accumulatedPoints = user.balance.times(
+    new BigInt(Date.now() - user.lastUpdatedAt)
   );
-  entity.from = event.params.from;
-  entity.target = event.params.target;
-  entity.value = event.params.value;
-  entity.balanceIncrease = event.params.balanceIncrease;
-  entity.index = event.params.index;
 
-  entity.blockNumber = event.block.number;
-  entity.blockTimestamp = event.block.timestamp;
-  entity.transactionHash = event.transaction.hash;
-
-  entity.save();
-}
-
-export function handleInitialized(event: InitializedEvent): void {
-  let entity = new Initialized(
-    event.transaction.hash.concatI32(event.logIndex.toI32())
-  );
-  entity.underlyingAsset = event.params.underlyingAsset;
-  entity.pool = event.params.pool;
-  entity.treasury = event.params.treasury;
-  entity.incentivesController = event.params.incentivesController;
-  entity.aTokenDecimals = event.params.aTokenDecimals;
-  entity.aTokenName = event.params.aTokenName;
-  entity.aTokenSymbol = event.params.aTokenSymbol;
-  entity.params = event.params.params;
-
-  entity.blockNumber = event.block.number;
-  entity.blockTimestamp = event.block.timestamp;
-  entity.transactionHash = event.transaction.hash;
-
-  entity.save();
-}
-
-export function handleMint(event: MintEvent): void {
-  let entity = new Mint(
-    event.transaction.hash.concatI32(event.logIndex.toI32())
-  );
-  entity.caller = event.params.caller;
-  entity.onBehalfOf = event.params.onBehalfOf;
-  entity.value = event.params.value;
-  entity.balanceIncrease = event.params.balanceIncrease;
-  entity.index = event.params.index;
-
-  entity.blockNumber = event.block.number;
-  entity.blockTimestamp = event.block.timestamp;
-  entity.transactionHash = event.transaction.hash;
-
-  entity.save();
-}
-
-export function handleTransfer(event: TransferEvent): void {
-  let entity = new Transfer(
-    event.transaction.hash.concatI32(event.logIndex.toI32())
-  );
-  entity.from = event.params.from;
-  entity.to = event.params.to;
-  entity.value = event.params.value;
-
-  entity.blockNumber = event.block.number;
-  entity.blockTimestamp = event.block.timestamp;
-  entity.transactionHash = event.transaction.hash;
-
-  entity.save();
+  user.accumulatedPoints = user.accumulatedPoints.plus(accumulatedPoints);
+  user.save();
 }
