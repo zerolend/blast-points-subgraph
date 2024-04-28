@@ -1,0 +1,76 @@
+specVersion: 1.0.0
+indexerHints:
+  prune: auto
+schema:
+  file: ./schema.graphql
+dataSources:
+  - kind: ethereum
+    name: USDBAToken
+    network: blast
+    source:
+      address: "0x23A58cbe25E36e26639bdD969B0531d3aD5F9c34"
+      abi: USDBAToken
+      startBlock: 0
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - Approval
+        - BalanceTransfer
+        - Burn
+        - Initialized
+        - Mint
+        - Transfer
+      abis:
+        - name: USDBAToken
+          file: ./abis/USDBAToken.json
+      eventHandlers:
+        - event: Approval(indexed address,indexed address,uint256)
+          handler: handleApproval
+        - event: BalanceTransfer(indexed address,indexed address,uint256,uint256)
+          handler: handleBalanceTransfer
+        - event: Burn(indexed address,indexed address,uint256,uint256,uint256)
+          handler: handleBurn
+        - event: Initialized(indexed address,indexed address,address,address,uint8,string,string,bytes)
+          handler: handleInitialized
+        - event: Mint(indexed address,indexed address,uint256,uint256,uint256)
+          handler: handleMint
+        - event: Transfer(indexed address,indexed address,uint256)
+          handler: handleTransfer
+      file: ./src/usdba-token.ts
+  - kind: ethereum
+    name: USDBVToken
+    network: blast
+    source:
+      address: "0x0e914b7669E97fd0c2644Af60E90EA7ddb4F91d1"
+      abi: USDBVToken
+      startBlock: 192485
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - USDBVTokenApproval
+        - USDBVTokenBorrowAllowanceDelegated
+        - USDBVTokenBurn
+        - USDBVTokenInitialized
+        - USDBVTokenMint
+        - USDBVTokenTransfer
+      abis:
+        - name: USDBVToken
+          file: ./abis/USDBVToken.json
+      eventHandlers:
+        - event: Approval(indexed address,indexed address,uint256)
+          handler: handleApproval
+        - event: BorrowAllowanceDelegated(indexed address,indexed address,indexed address,uint256)
+          handler: handleBorrowAllowanceDelegated
+        - event: Burn(indexed address,indexed address,uint256,uint256,uint256)
+          handler: handleBurn
+        - event: Initialized(indexed address,indexed address,address,uint8,string,string,bytes)
+          handler: handleInitialized
+        - event: Mint(indexed address,indexed address,uint256,uint256,uint256)
+          handler: handleMint
+        - event: Transfer(indexed address,indexed address,uint256)
+          handler: handleTransfer
+      file: ./src/usdbv-token.ts
