@@ -57,6 +57,6 @@ const getUSDBPoints = async (address, usdbPointsTotal, wethPointsTotal) => {
 
 getUSDBPoints(
   "0x00489ddbf5aa399ee576c066a25cc908e038721f",
-  540000000,
-  1040000000
+  540000000, // how much total points the USDB contract got
+  1040000000 // how much total points the WETH contract got
 );
