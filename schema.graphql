@@ -1,86 +1,13 @@
 type USDBUser @entity {
-  id: Bytes! # wallet
+  id: ID!
   balance: BigInt! # uint256
-  lastUpdatedAt: Int! # uint256
+  debt: BigInt! # uint256
+  lastUpdatedAt: BigInt! # uint256
   accumulatedPoints: BigInt!
 }
 
-type USDBATokenBalanceTransfer @entity(immutable: true) {
-  id: Bytes!
-  from: Bytes! # address
-  to: Bytes! # address
-  value: BigInt! # uint256
-  index: BigInt! # uint256
-  blockNumber: BigInt!
-  blockTimestamp: BigInt!
-  transactionHash: Bytes!
-}
-
-type USDBVTokenApproval @entity(immutable: true) {
-  id: Bytes!
-  owner: Bytes! # address
-  spender: Bytes! # address
-  value: BigInt! # uint256
-  blockNumber: BigInt!
-  blockTimestamp: BigInt!
-  transactionHash: Bytes!
-}
-
-type USDBVTokenBorrowAllowanceDelegated @entity(immutable: true) {
-  id: Bytes!
-  fromUser: Bytes! # address
-  toUser: Bytes! # address
-  asset: Bytes! # address
-  amount: BigInt! # uint256
-  blockNumber: BigInt!
-  blockTimestamp: BigInt!
-  transactionHash: Bytes!
-}
-
-type USDBVTokenBurn @entity(immutable: true) {
-  id: Bytes!
-  from: Bytes! # address
-  target: Bytes! # address
-  value: BigInt! # uint256
-  balanceIncrease: BigInt! # uint256
-  index: BigInt! # uint256
-  blockNumber: BigInt!
-  blockTimestamp: BigInt!
-  transactionHash: Bytes!
-}
-
-type USDBVTokenInitialized @entity(immutable: true) {
-  id: Bytes!
-  underlyingAsset: Bytes! # address
-  pool: Bytes! # address
-  incentivesController: Bytes! # address
-  debtTokenDecimals: Int! # uint8
-  debtTokenName: String! # string
-  debtTokenSymbol: String! # string
-  params: Bytes! # bytes
-  blockNumber: BigInt!
-  blockTimestamp: BigInt!
-  transactionHash: Bytes!
-}
-
-type USDBVTokenMint @entity(immutable: true) {
-  id: Bytes!
-  caller: Bytes! # address
-  onBehalfOf: Bytes! # address
-  value: BigInt! # uint256
-  balanceIncrease: BigInt! # uint256
-  index: BigInt! # uint256
-  blockNumber: BigInt!
-  blockTimestamp: BigInt!
-  transactionHash: Bytes!
-}
-
-type USDBVTokenTransfer @entity(immutable: true) {
-  id: Bytes!
-  from: Bytes! # address
-  to: Bytes! # address
-  value: BigInt! # uint256
-  blockNumber: BigInt!
-  blockTimestamp: BigInt!
-  transactionHash: Bytes!
+type Core @entity {
+  id: ID!
+  totalPointsUSDB: BigInt!
+  totalPointsWETH: BigInt!
 }
